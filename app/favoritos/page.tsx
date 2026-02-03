@@ -16,9 +16,7 @@ interface Game {
 
 export default function FavoritesPage() {
   const [games, setGames] = React.useState<Game[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const cargarFavoritos = async () => {
-    setLoading(true);
     try {
       const response = await fetch("/api/games?favorites=true");
       const data = await response.json();
@@ -26,8 +24,6 @@ export default function FavoritesPage() {
       setGames(data);
     } catch (error) {
       console.error("Error al cargar los juegos favoritos:", error);
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -8,8 +8,6 @@ import { Game } from "./types/types";
 export default function Home() {
   // estado para almacenar los juegos
   const [games, setGames] = React.useState<Game[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [game, setGame] = React.useState<Game | null>(null); // devuelve o un juego o null
   // funcion para cargar los juegos
   const cargarJuegos = async () => {
     const response = await fetch("/api/games");

@@ -19,15 +19,12 @@ type Game = {
 
 type Params = {
   id: string;
-  onGameDeleted?: () => void;
 };
 
 export default function GamePage({
   params,
-  onGameDeleted,
 }: {
   params: Promise<Params>;
-  onGameDeleted?: () => void;
 }) {
   const { id } = React.use(params);
   const [game, setGame] = React.useState<Game | null>(null); // devuelve o un juego o null
@@ -75,7 +72,6 @@ export default function GamePage({
       const result = await response.json();
 
       console.log(result);
-      onGameDeleted?.(); // recargar la lista de juegos
       router.push("/");
     } catch (error) {
       console.error("Error al eliminar:", error);
