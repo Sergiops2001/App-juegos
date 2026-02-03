@@ -13,13 +13,10 @@ import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { Image } from "@heroui/image";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  Logo,
-} from "@/components/icons";
-import { Image } from "@heroui/image";
 
 export const Navbar = () => {
   return (
@@ -32,10 +29,10 @@ export const Navbar = () => {
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Image
               alt="Logo"
+              className="rounded-none"
+              height={25}
               src="/logo1.0.png"
               width={25}
-              height={25}
-              className="rounded-none"
             />
           </NextLink>
         </NavbarBrand>

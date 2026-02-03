@@ -1,12 +1,10 @@
 "use client";
 import React from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalBody,
-} from "@heroui/modal";
-import EditForm from "./EditForm";
+import { Modal, ModalContent, ModalBody } from "@heroui/modal";
+
 import { Game } from "../types/types";
+
+import EditForm from "./EditForm";
 
 type EditModalProps = {
   game: Game;
@@ -22,11 +20,11 @@ export default function EditModal({
   onSuccess,
 }: EditModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+    <Modal isOpen={isOpen} scrollBehavior="inside" onClose={onClose}>
       <ModalContent>
         {(onClose) => (
           <ModalBody>
-            <EditForm game={game} onGameEdited={onSuccess} onCancel={onClose} />
+            <EditForm game={game} onCancel={onClose} onGameEdited={onSuccess} />
           </ModalBody>
         )}
       </ModalContent>

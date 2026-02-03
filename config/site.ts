@@ -12,7 +12,6 @@ export const siteConfig = {
       label: "Favoritos",
       href: "/favoritos",
     },
-
   ],
   navMenuItems: [
     {

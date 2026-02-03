@@ -1,11 +1,10 @@
 // pagina de detalle de un juego
 "use client";
 import React from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
-
 
 type Game = {
   id: number;
@@ -23,7 +22,13 @@ type Params = {
   onGameDeleted?: () => void;
 };
 
-export default function GamePage({ params, onGameDeleted }: { params: Promise<Params>, onGameDeleted?: () => void }) {
+export default function GamePage({
+  params,
+  onGameDeleted,
+}: {
+  params: Promise<Params>;
+  onGameDeleted?: () => void;
+}) {
   const { id } = React.use(params);
   const [game, setGame] = React.useState<Game | null>(null); // devuelve o un juego o null
   const [loading, setLoading] = React.useState(true);
@@ -35,6 +40,7 @@ export default function GamePage({ params, onGameDeleted }: { params: Promise<Pa
     try {
       const response = await fetch(`/api/games/${id}`); // obtener el juego por id
       const data = await response.json();
+
       setGame(data); // actualizar el estado con los juegos cargados
       setLoading(false);
     } catch (error) {
@@ -42,13 +48,17 @@ export default function GamePage({ params, onGameDeleted }: { params: Promise<Pa
       setLoading(false);
     }
   };
-  // cargar los datos al iniciar 
+
+  // cargar los datos al iniciar
   React.useEffect(() => {
     cargarJuego();
   }, [id]);
   //funcion para eliminar juego
   const handleDelete = async (id: number) => {
-    const confirmed = window.confirm("¿Seguro que quieres eliminar este juego?");
+    const confirmed = window.confirm(
+      "¿Seguro que quieres eliminar este juego?",
+    );
+
     if (!confirmed) return;
 
     setDeleting(true); // activar loading
@@ -63,8 +73,9 @@ export default function GamePage({ params, onGameDeleted }: { params: Promise<Pa
       }
 
       const result = await response.json();
+
       console.log(result);
-      onGameDeleted?.();// recargar la lista de juegos
+      onGameDeleted?.(); // recargar la lista de juegos
       router.push("/");
     } catch (error) {
       console.error("Error al eliminar:", error);
@@ -73,6 +84,7 @@ export default function GamePage({ params, onGameDeleted }: { params: Promise<Pa
       setDeleting(false); // desactivar loading
     }
   };
+
   // manejo de estados
   if (loading) {
     return <div>Loading...</div>;
@@ -95,8 +107,15 @@ export default function GamePage({ params, onGameDeleted }: { params: Promise<Pa
           src={game.cover}
           width={270}
         />
-        <Button className="mt-4 hover:bg-yellow-500 w-full">Añadir a favoritos</Button>
-        <Button className="mt-4 hover:bg-slate-500 w-full" onPress={() => router.push("/")}>Volver a inicio</Button>
+        <Button className="mt-4 hover:bg-yellow-500 w-full">
+          Añadir a favoritos
+        </Button>
+        <Button
+          className="mt-4 hover:bg-slate-500 w-full"
+          onPress={() => router.push("/")}
+        >
+          Volver a inicio
+        </Button>
         <Button
           className="mt-4 bg-red-500 hover:bg-red-600 w-full"
           isLoading={deleting}
@@ -106,5 +125,5 @@ export default function GamePage({ params, onGameDeleted }: { params: Promise<Pa
         </Button>
       </CardBody>
     </Card>
-  )
+  );
 }
