@@ -50,7 +50,6 @@
     "@heroui/tooltip": "2.2.26",
     "@heroui/user": "2.2.24",
     "@hookform/resolvers": "^5.2.2",
-    "@nextui-org/react": "^2.6.11",
     "@react-aria/ssr": "3.9.10",
     "@react-aria/visually-hidden": "3.8.29",
     "clsx": "2.1.1",

@@ -19,33 +19,33 @@ type Game = {
 };
 
 type Params = {
-    id: string;
+  id: string;
   onGameDeleted?: () => void;
-}; 
+};
 
-export default function GamePage({ params, onGameDeleted }: { params: Params, onGameDeleted?: () => void }) {
-    const [ game, setGame ] = React.useState<Game | null>(null); // devuelve o un juego o null
-    const [ loading, setLoading ] = React.useState(true);
-    const [ deleting, setDeleting ] = React.useState(false);
-    const { id } = params;
-    const router = useRouter();
+export default function GamePage({ params, onGameDeleted }: { params: Promise<Params>, onGameDeleted?: () => void }) {
+  const { id } = React.use(params);
+  const [game, setGame] = React.useState<Game | null>(null); // devuelve o un juego o null
+  const [loading, setLoading] = React.useState(true);
+  const [deleting, setDeleting] = React.useState(false);
+  const router = useRouter();
 
   const cargarJuego = async () => {
     setLoading(true);
     try {
-    const response = await fetch(`/api/games/${id}`); // obtener el juego por id
-    const data = await response.json();
-    setGame(data); // actualizar el estado con los juegos cargados
-    setLoading(false);
-  } catch (error) {
-    console.error(error); 
-    setLoading(false);
-  }
+      const response = await fetch(`/api/games/${id}`); // obtener el juego por id
+      const data = await response.json();
+      setGame(data); // actualizar el estado con los juegos cargados
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
   // cargar los datos al iniciar 
   React.useEffect(() => {
     cargarJuego();
-  }, [id]); 
+  }, [id]);
   //funcion para eliminar juego
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm("¿Seguro que quieres eliminar este juego?");
@@ -65,7 +65,7 @@ export default function GamePage({ params, onGameDeleted }: { params: Params, on
       const result = await response.json();
       console.log(result);
       onGameDeleted?.();// recargar la lista de juegos
-      router.push("/"); 
+      router.push("/");
     } catch (error) {
       console.error("Error al eliminar:", error);
       alert("No se pudo eliminar el juego");
@@ -76,12 +76,12 @@ export default function GamePage({ params, onGameDeleted }: { params: Params, on
   // manejo de estados
   if (loading) {
     return <div>Loading...</div>;
-  } 
-  if(!game) {
+  }
+  if (!game) {
     return <div>Game not found</div>;
-  } 
+  }
 
-  return(
+  return (
     <Card className="py-4 justify-center">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
         <p className="text-2xl uppercase font-bold">{game.title}</p>

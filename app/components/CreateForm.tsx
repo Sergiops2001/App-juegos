@@ -1,19 +1,18 @@
-// formulario de creación de juego
 "use client";
 import React from "react";
-import {Form, Input, Select, SelectItem, Checkbox, Button} from "@nextui-org/react";
+import { Form } from "@heroui/form";
+import { Input } from "@heroui/input";
+import { Checkbox } from "@heroui/checkbox";
+import { Button } from "@heroui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { newGameSchema } from "../schemas/newGame.schema";
-import { NewGameFormData } from "../schemas/newGame.schema";
-import { Game } from "../types/types";
+import { newGameSchema, NewGameFormData } from "../schemas/newGame.schema";
 
 type CreateFormProps = {
-    onGameCreated?: () => void | Promise<void>; // callback para recargar los juegos
+    onGameCreated?: () => void | Promise<void>;
 };
 
 export default function CreateForm({ onGameCreated }: CreateFormProps) {
-    //definicion de constantes 
     const {
         register,
         reset,
@@ -32,29 +31,29 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
         },
     });
     const [message, setMessage] = React.useState<{ text: string; type: 'success' | 'error' } | null>(null);
-    
-    const onSubmit = async (data: NewGameFormData) => {
-        console.log(data);
-        //aqui tenemos que hacer la peticion post para añadir el juego
-        const response = await fetch("/api/games", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        if(!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Error al crear el juego");
-        }
-        const result = await response.json();
-        console.log(result);
-        setMessage({ text: '¡Juego creado!', type: 'success' });
-        await onGameCreated?.();
-        reset();
 
-        // body: JSON.stringify(data),
+    const onSubmit = async (data: NewGameFormData) => {
+        try {
+            const response = await fetch("/api/games", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error al crear el juego");
+            }
+            setMessage({ text: '¡Juego creado!', type: 'success' });
+            await onGameCreated?.();
+            reset();
+        } catch (error) {
+            console.error(error);
+            setMessage({ text: 'Error al crear el juego', type: 'error' });
+        }
     };
+
     return (
         <div className="px-4 mb-8">
             <h2 className="text-center text-xl sm:text-2xl mb-4">Crear Juego</h2>
@@ -62,9 +61,6 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
                 <Input
                     type="text"
                     label="Título"
-                    classNames={{
-                        label: "mb-4",  // ← Margen inferior al label
-                    }}
                     placeholder="Introduce el título del juego"
                     {...register("title")}
                     isInvalid={!!errors.title}
@@ -73,9 +69,6 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
                 <Input
                     type="text"
                     label="Plataforma"
-                    classNames={{
-                        label: "mb-4",  // ← Margen inferior al label
-                    }}
                     placeholder="Introduce la plataforma del juego"
                     {...register("platform")}
                     isInvalid={!!errors.platform}
@@ -84,9 +77,6 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
                 <Input
                     type="text"
                     label="Género"
-                    classNames={{
-                        label: "mb-4",  // ← Margen inferior al label
-                    }}
                     placeholder="Introduce el género del juego"
                     {...register("genre")}
                     isInvalid={!!errors.genre}
@@ -95,10 +85,7 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
                 <Input
                     type="date"
                     label="Fecha de lanzamiento"
-                    classNames={{
-                        label: "mb-4",  // ← Margen inferior al label
-                    }}
-                    placeholder="Introduce la fecha de lanzamiento del juego"
+                    placeholder="Introduce la fecha"
                     {...register("releaseDate")}
                     isInvalid={!!errors.releaseDate}
                     errorMessage={errors.releaseDate?.message}
@@ -106,10 +93,7 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
                 <Input
                     type="text"
                     label="Portada"
-                    classNames={{
-                        label: "mb-4",  // ← Margen inferior al label
-                    }}
-                    placeholder="Introduce la portada del juego"
+                    placeholder="Introduce la URL de la portada"
                     {...register("cover")}
                     isInvalid={!!errors.cover}
                     errorMessage={errors.cover?.message}
@@ -120,23 +104,23 @@ export default function CreateForm({ onGameCreated }: CreateFormProps) {
                 >
                     Favorito
                 </Checkbox>
-                {errors.isFavorite?.message && (
-                    <p className="text-danger text-small">
-                        {errors.isFavorite.message}
-                    </p>
-                )}
                 <Input
                     type="text"
                     label="Descripción"
-                    classNames={{
-                        label: "mb-4",  // ← Margen inferior al label
-                    }}
-                    placeholder="Introduce la descripción del juego"
+                    placeholder="Introduce la descripción"
                     {...register("description")}
                     isInvalid={!!errors.description}
                     errorMessage={errors.description?.message}
                 />
-                <Button 
+
+                {message && (
+                    <p className={`text-sm ${message.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                        {message.text}
+                    </p>
+                )}
+
+                <Button
+                    color="primary"
                     type="submit"
                     isLoading={isSubmitting}>
                     Crear Juego

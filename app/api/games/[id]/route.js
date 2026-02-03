@@ -3,7 +3,8 @@ import { games } from '../data';
 
 // GET /api/games/[id] - GET BY ID 
 export async function GET(request, { params }) {
-  const id = parseInt(params.id);
+  const { id: rawId } = await params;
+  const id = parseInt(rawId);
   const game = games.find(g => g.id === id);
 
   if (!game) {
@@ -19,12 +20,13 @@ export async function GET(request, { params }) {
 // PUT /api/games/[id] - UPDATE BY ID
 export async function PUT(request, { params }) {
   try {
-    const id = parseInt(params.id);
+    const { id: rawId } = await params;
+    const id = parseInt(rawId);
     const body = await request.json();
-    
+
     const index = games.findIndex(g => g.id === id);
 
-    if (index === -1) { 
+    if (index === -1) {
       return NextResponse.json(
         { error: 'Juego no encontrado' },
         { status: 404 }
@@ -49,7 +51,8 @@ export async function PUT(request, { params }) {
 
 // DELETE /api/games/[id] - DELETE BY ID
 export async function DELETE(request, { params }) {
-  const id = parseInt(params.id);
+  const { id: rawId } = await params;
+  const id = parseInt(rawId);
   const index = games.findIndex(g => g.id === id);
 
   if (index === -1) {
@@ -59,7 +62,7 @@ export async function DELETE(request, { params }) {
     );
   }
 
-  const deletedGame = games.splice(index, 1)[0]; 
+  const deletedGame = games.splice(index, 1)[0];
 
   return NextResponse.json(deletedGame);
 }

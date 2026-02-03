@@ -3,13 +3,10 @@ import React from "react";
 import {
   Modal,
   ModalContent,
-  ModalHeader,
   ModalBody,
-} from "@nextui-org/react";
+} from "@heroui/modal";
 import EditForm from "./EditForm";
 import { Game } from "../types/types";
-
-
 
 type EditModalProps = {
   game: Game;
@@ -25,14 +22,12 @@ export default function EditModal({
   onSuccess,
 }: EditModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalContent>
         {(onClose) => (
-          <>
-            <ModalBody>
-              <EditForm game={game} onGameEdited={onSuccess} onCancel={onClose} />
-            </ModalBody>
-          </>
+          <ModalBody>
+            <EditForm game={game} onGameEdited={onSuccess} onCancel={onClose} />
+          </ModalBody>
         )}
       </ModalContent>
     </Modal>
